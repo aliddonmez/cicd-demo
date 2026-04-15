@@ -2,19 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
-                checkout scm
+                echo 'Repo already cloned by Jenkins'
             }
         }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package') {
+        stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -22,7 +16,17 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t cicd-demo:1.0.0 .'
+                sh 'docker build -t cicd-demo .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker stop cicd-demo-container || true
+                docker rm cicd-demo-container || true
+                docker run -d -p 8080:8080 --name cicd-demo-container cicd-demo
+                '''
             }
         }
     }
