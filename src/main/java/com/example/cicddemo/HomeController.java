@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "CI/CD sistemi çalışjhhkhkjıyor!";
+        return "CI/CD sistemi çalışıyor!";
     }
 
     @GetMapping("/version")
